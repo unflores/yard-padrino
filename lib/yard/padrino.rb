@@ -225,14 +225,15 @@ module YARD
 
       def process_http_verb
         verb = statement.method_name(true).to_s.upcase
-        paths = [ convert_literal(statement.parameters.first) ]
+        paths = statement.parameters[0..-2].map{|s| convert_literal(s) }
 
         last_param = statement.parameters(false).last
         options = convert_hash(last_param)  if is_hash?(last_param)
 
         controller = extra_state.padrino[:controller]  if extra_state.padrino
-
-        register_padrino_route(controller, verb, paths, options)
+        paths.each do |path|
+          register_padrino_route(controller, verb, [path], options)
+        end
       end
 
       def register_padrino_route(controller, verb, args, options = nil, &block)
@@ -271,7 +272,11 @@ module YARD
       end
 
       def register_padrino_handler(args = {}, &block)
-        handler = args[:class].new(namespace, args[:method_name]) do |o|
+        path = args[:controller].to_s + args[:args].join()
+        version = path.match(/\/(v\d)\//).to_a.last
+        versioned_namespace = YARD::CodeObjects::ClassObject.new(namespace,version)
+
+        handler = args[:class].new(versioned_namespace, args[:method_name]) do |o|
           o.group        = args[:group]
           o.source       = statement.source
           o.docstring    = statement.comments
