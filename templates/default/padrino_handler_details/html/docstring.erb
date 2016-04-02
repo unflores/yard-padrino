@@ -1,0 +1,31 @@
+<% if object.has_tag?(:param) %>
+    <style>
+      .table-params{
+        border-collapse: collapse;
+        border-color: grey;
+      }
+      .table-params tr{
+        border-collapse: inherit;
+        border-top: 1px solid #ccc;
+      }
+      .table-params td, .table-params th{
+        border: 1px solid #ddd;
+        padding: 6px 13px;
+      }
+    </style>
+    <table class='table-params'>
+      <tr>
+        <th>Parameter</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    <% object.tags(:param).each do |param| %>
+      <tr>
+        <td><%= param.name %></td>
+        <td><%= param.type %></td>
+        <td><%= param.text %></td>
+      </tr>
+    <% end %>
+    </table>
+  <% end %>
+
