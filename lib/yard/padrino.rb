@@ -239,11 +239,16 @@ module YARD
       def register_padrino_route(controller, verb, args, options = nil, &block)
         method_name = RouteObject.method_name_for_handler(controller, verb, args)
 
+        path = controller.to_s + args.join()
+        version = path.match(/\/(v\d)\//).to_a.last
+        versioned_namespace = YARD::CodeObjects::ClassObject.new(namespace,version)
+
         register_padrino_handler(
           {
             :class        => RouteObject,
             :group        => "Padrino Routings",
             :method_name  => method_name,
+            :namespace    => versioned_namespace,
             :controller   => controller,
             :verb         => verb,
             :args         => args,
@@ -272,11 +277,9 @@ module YARD
       end
 
       def register_padrino_handler(args = {}, &block)
-        path = args[:controller].to_s + args[:args].join()
-        version = path.match(/\/(v\d)\//).to_a.last
-        versioned_namespace = YARD::CodeObjects::ClassObject.new(namespace,version)
+        final_namespace = args[:namespace] || namespace
 
-        handler = args[:class].new(versioned_namespace, args[:method_name]) do |o|
+        handler = args[:class].new(final_namespace, args[:method_name]) do |o|
           o.group        = args[:group]
           o.source       = statement.source
           o.docstring    = statement.comments
