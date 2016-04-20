@@ -232,7 +232,16 @@ module YARD
 
         controller = extra_state.padrino[:controller]  if extra_state.padrino
         paths.each do |path|
-          register_padrino_route(controller, verb, [path], options)
+          # If there is no controller try to infer one based off of the path structure
+          if controller.nil?
+            matches = path.match(/(\/api\/v[0-9]\/[^\/]+\/)(.+)/).to_a
+            break if matches.count != 3
+            controller = matches[1]
+            path = matches[2]
+          end
+
+          full_path = File.join(controller,path)
+          register_padrino_route(controller, verb, [full_path], options)
         end
       end
 
