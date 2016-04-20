@@ -276,9 +276,11 @@ module YARD
         )
       end
 
+      # Register handlers and routes for padrino
+      # @params [Hash] args
+      # @options args [String] controller The current controller, comes out as part of path
       def register_padrino_handler(args = {}, &block)
         final_namespace = args[:namespace] || namespace
-
         handler = args[:class].new(final_namespace, args[:method_name]) do |o|
           o.group        = args[:group]
           o.source       = statement.source
