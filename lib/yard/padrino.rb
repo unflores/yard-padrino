@@ -223,10 +223,30 @@ module YARD
         register_padrino_general_handler(controller, verb, paths, options)
       end
 
+      def parse_paths(statement)
+        # Get base statement
+        base_statement = statement.parameters
+        # Pretty sure that last statement is for passed block var, I don't care about it
+        # @todo Verify what happens when passing multiple variables to a block ex. blah do |a,b|
+        base_statement.pop
+        # Not using any hashes ex. :index, map: '/some/path'
+        if(base_statement != base_statement.jump(:label))
+          if(base_statement.jump(:label).source == "map:")
+            Array(base_statement.last.source.split('map:').last.gsub("'","").strip)
+          elsif(base_statement.jump(:label).source == "with:")
+            # Ignore the with: statement for now
+            Array(base_statement.first.source.gsub("'","").strip())
+          end
+        else
+          # Only paths
+          base_statement.source.gsub("'","").split(',').map(&:split)
+          Array(base_statement.source.gsub("'","").strip())
+        end
+      end
+
       def process_http_verb
         verb = statement.method_name(true).to_s.upcase
-        paths = statement.parameters[0..-2].map{|s| convert_literal(s) }
-
+        paths = parse_paths(statement)
         last_param = statement.parameters(false).last
         options = convert_hash(last_param)  if is_hash?(last_param)
 
