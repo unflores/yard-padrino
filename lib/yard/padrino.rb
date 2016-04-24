@@ -270,7 +270,7 @@ module YARD
       def register_padrino_route(controller, verb, args, options = nil, &block)
         method_name = RouteObject.method_name_for_handler(controller, verb, args)
 
-        path = controller.to_s + args.join()
+        path = controller + args.join()
         version = path.match(/\/(v\d)\//).to_a.last
         versioned_namespace = YARD::CodeObjects::ClassObject.new(namespace,version)
 
