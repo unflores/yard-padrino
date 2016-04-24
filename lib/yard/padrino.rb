@@ -239,8 +239,7 @@ module YARD
           end
         else
           # Only paths
-          base_statement.source.gsub("'","").split(',').map(&:split)
-          Array(base_statement.source.gsub("'","").strip())
+          Array(base_statement.source.gsub("'","").split(',').map(&:split))
         end
       end
 
