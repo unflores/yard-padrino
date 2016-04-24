@@ -249,8 +249,8 @@ module YARD
         last_param = statement.parameters(false).last
         options = convert_hash(last_param)  if is_hash?(last_param)
 
-        controller = extra_state.padrino[:controller]  if extra_state.padrino
         paths.each do |path|
+          controller = extra_state.padrino[:controller]
           # If there is no controller try to infer one based off of the path structure
           if controller.nil?
             matches = path.match(/(\/api\/v[0-9]\/[^\/]+\/)(.+)/).to_a
