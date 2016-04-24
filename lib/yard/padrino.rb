@@ -272,8 +272,8 @@ module YARD
 
         path = controller + args.join()
         version = path.match(/\/(v\d)\//).to_a.last
+        version ||= 'v1'
         versioned_namespace = YARD::CodeObjects::ClassObject.new(namespace,version)
-
         register_padrino_handler(
           {
             :class        => RouteObject,
