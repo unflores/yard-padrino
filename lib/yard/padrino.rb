@@ -263,9 +263,7 @@ module YARD
               path = pieces[1]
             end
           end
-
-          full_path = File.join(controller,path)
-          register_padrino_route(controller, verb, [full_path], options)
+          register_padrino_route(controller, verb, [path], options)
         end
       end
 
