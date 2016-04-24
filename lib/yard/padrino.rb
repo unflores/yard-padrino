@@ -254,9 +254,14 @@ module YARD
           # If there is no controller try to infer one based off of the path structure
           if controller.nil?
             matches = path.match(/(\/api\/v[0-9]\/[^\/]+\/)(.+)/).to_a
-            break if matches.count != 3
-            controller = matches[1]
-            path = matches[2]
+            if matches.count == 3
+              controller = matches[1]
+              path = matches[2]
+            elsif((matches = path.match(/sessions/).to_a).size > 0)
+              pieces = path.split(matches[0])
+              controller = pieces[0] + matches[0]
+              path = pieces[1]
+            end
           end
 
           full_path = File.join(controller,path)
