@@ -282,7 +282,7 @@ module YARD
             :namespace    => versioned_namespace,
             :controller   => controller,
             :verb         => verb,
-            :args         => args,
+            :args         => [path],
             :options      => options,
           },
           &block
